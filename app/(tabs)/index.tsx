@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { Avatar, List, FAB, BottomNavigation, TextInput } from "react-native-paper";
+import { SafeAreaView } from 'react-native';
+
+const App = () => {
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <ChatScreen />
+    </SafeAreaView>
+  );
+};
 
 const ChatScreen = () => {
   const [searchText, setSearchText] = useState("");
@@ -19,11 +28,11 @@ const ChatScreen = () => {
         title={chat.name}
         description={chat.message}
         left={(props) => (
-<Avatar.Image
-  {...props}
-  source={{ uri: "https://i.pravatar.cc/48" }}
-  size={48}
-/>
+          <Avatar.Image
+            {...props}
+            source={{ uri: "https://i.pravatar.cc/48" }}
+            size={48}
+          />
 
         )}
         right={(props) => (
