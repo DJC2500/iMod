@@ -39,7 +39,14 @@ export default function TabLayout() {
           title: 'Explore',
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
-      />
+      />      
+      <Tabs.Screen
+      name="contact"
+      options={{
+        title: 'Contact',
+        tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+      }}
+    />
     </Tabs>
   );
 }
