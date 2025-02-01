@@ -1,10 +1,11 @@
-import React from "react";
-import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, FlatList } from "react-native";
 import { Avatar, List } from "react-native-paper";
 import { useRouter } from "expo-router";
 
 const ChatsScreen = () => {
   const router = useRouter();
+  const [search, setSearch] = useState("");
 
   const chats = [
     { id: 1, name: "Bryan", message: "What do you think?", time: "4:30 PM", unread: 2 },
@@ -16,48 +17,64 @@ const ChatsScreen = () => {
   const handlePress = (chat) => {
     router.push({
       pathname: "/screen/chat",
+      params: { id: chat.id, name: chat.name },
     });
   };
 
-  const renderChats = () => {
-    return chats.map((chat) => (
-      <TouchableOpacity
-        key={chat.id}
-        onPress={() => handlePress(chat)}
-        activeOpacity={0.7} // Native-like press effect
-      >
-        <List.Item
-          title={chat.name}
-          description={chat.message}
-          left={(props) => (
-            <Avatar.Image
-              {...props}
-              source={{ uri: "https://i.pravatar.cc/48" }}
-              size={48}
-            />
-          )}
-          right={(props) => (
-            <View style={styles.rightSection}>
-              <Text style={styles.chatTime}>{chat.time}</Text>
-              {chat.unread > 0 && (
-                <View style={styles.unreadBadge}>
-                  <Text style={styles.unreadText}>{chat.unread}</Text>
+  const filteredChats = chats.filter((chat) =>
+    chat.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.searchBar}
+        placeholder="Search chats..."
+        value={search}
+        onChangeText={setSearch}
+      />
+      <FlatList
+        data={filteredChats}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handlePress(item)} activeOpacity={0.7}>
+            <List.Item
+              title={item.name}
+              description={item.message}
+              left={(props) => (
+                <Avatar.Image {...props} source={{ uri: "https://i.pravatar.cc/48" }} size={48} />
+              )}
+              right={(props) => (
+                <View style={styles.rightSection}>
+                  <Text style={styles.chatTime}>{item.time}</Text>
+                  {item.unread > 0 && (
+                    <View style={styles.unreadBadge}>
+                      <Text style={styles.unreadText}>{item.unread}</Text>
+                    </View>
+                  )}
                 </View>
               )}
-            </View>
-          )}
-        />
-      </TouchableOpacity>
-    ));
-  };
-
-  return <View style={styles.container}>{renderChats()}</View>;
+            />
+          </TouchableOpacity>
+        )}
+      />
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f4f4f4",
+  },
+  searchBar: {
+    backgroundColor: "#fff",
+    padding: 10,
+    margin: 10,
+    borderRadius: 10,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
   rightSection: {
     alignItems: "flex-end",

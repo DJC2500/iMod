@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet, FlatList, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Appbar, Avatar, TextInput, Text, IconButton } from 'react-native-paper';
@@ -71,7 +72,7 @@ function ChatScreen() {
         <View style={styles.inner}>
           {/* App Bar */}
           <Appbar.Header style={styles.appbar}>
-            <Appbar.BackAction onPress={() => { }} />
+            <Appbar.BackAction onPress={() => { router.back() }} />
             <Avatar.Image size={40} source={require('../../../assets/images/canyon.jpg')} />
             <Appbar.Content title="Bryan" />
             <Appbar.Action icon="phone" onPress={() => { }} />
@@ -100,8 +101,9 @@ function ChatScreen() {
             <IconButton
               icon="send"
               size={24}
-              iconColor="white"
+              iconColor={message.trim() ? "blue" : "grey"}
               onPress={handleSendMessage}
+              disabled={!message.trim()}
             />
           </View>
         </View>
@@ -142,10 +144,10 @@ const styles = StyleSheet.create({
     maxWidth: '70%',
   },
   bubbleReceived: {
-    backgroundColor: '#E0E0E0', // Lighter background for received messages
+    backgroundColor: '#E0E0E0', // Beautify white
   },
   bubbleSent: {
-    backgroundColor: '#4CAF50', // Lighter green for sent messages
+    backgroundColor: '#336BFF', // Turquiose blue
   },
   avatar: {
     marginRight: 8,

@@ -6,7 +6,7 @@ import { router } from "expo-router"; // Import router for navigation
 
 // Consolidated Profile Screen component
 const ProfileScreen = () => {
-  const { id, name } = useLocalSearchParams();
+  const { id, name, username } = useLocalSearchParams();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ const ProfileScreen = () => {
           source={{ uri: 'https://i.pravatar.cc/150?u=' + id }} // Dynamic avatar URL
         />
         <Text style={styles.name}>{name || 'Unknown User'}</Text>
-        <Text style={styles.phone}>+14844533842</Text>
+        <Text style={styles.phone}>@makintunde</Text>
       </View>
 
       {/* Actions Section */}

@@ -12,6 +12,8 @@ const App = () => {
     { key: "settings", title: "Settings", icon: "cog" },
   ]);
 
+
+
   const renderScene = BottomNavigation.SceneMap({
     chats: ChatsScreen,
     explore: ExploreScreen,
