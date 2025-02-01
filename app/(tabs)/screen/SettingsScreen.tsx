@@ -11,25 +11,22 @@ const SettingsScreen = () => {
                 Settings
             </Text>
 
-<Link
-  href="/screen/ProfileScreen"
-  asChild
->
-  <View style={styles.profileContainer}>
-    <Text>Go to Profile</Text>
-  </View>
-</Link>
-
-            {/* Profile Section */}
-            <View style={styles.profileContainer}>
-                <Avatar.Image size={64} source={{ uri: 'https://via.placeholder.com/150' }} />
-                <View style={styles.profileText}>
-                    <Text variant="titleLarge">Daniel</Text>
+            {/* Profile Section - Make this clickable */}
+            <Link
+                href="/screen/ProfileScreen?name=Daniel"
+                asChild
+            >
+                <View style={styles.profileContainer}>
+                    <Avatar.Image size={64} source={{ uri: 'https://via.placeholder.com/150' }} />
+                    <View style={styles.profileText}>
+                        <Text variant="titleLarge">Daniel</Text>
+                    </View>
                 </View>
-                <Button mode="contained" style={styles.editButton}>
-                    Edit
-                </Button>
-            </View>
+            </Link>
+
+            <Button mode="contained" style={styles.editButton}>
+                Edit
+            </Button>
 
             {/* Settings List */}
             <List.Section>
