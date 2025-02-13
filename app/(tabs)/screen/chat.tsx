@@ -1,29 +1,46 @@
 import { router } from 'expo-router';
-import React, { useState, useEffect } from 'react';
-import { View, Image, StyleSheet, FlatList, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, FlatList, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Appbar, Avatar, TextInput, Text, IconButton } from 'react-native-paper';
-import { wsService } from '../../../services/wsService'; 
+
+const WS_URL = "ws://ws://YOUR_EC2_PUBLIC_IP:8080"; // Replace with your EC2 WebSocket URL
 
 function ChatScreen() {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState<{ id: string, type: string, text: string }[]>([]);
+  const ws = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    wsService.connect("ws://192.168.100.217:8080");
+    ws.current = new WebSocket(WS_URL);
 
-    wsService.onMessage((msg) => {
+    ws.current.onopen = () => {
+      console.log("Connected to WebSocket server");
+    };
+
+    ws.current.onmessage = (event) => {
+      const msg = JSON.parse(event.data);
       console.log(`Message from ${msg.sender}: ${msg.content}`);
       setMessages((prevMessages) => [
         ...prevMessages,
         { id: Date.now().toString() + '-bot', type: 'received', text: msg.content }
       ]);
-    });
+    };
 
-    return () => wsService.disconnect();
+    ws.current.onerror = (error) => {
+      console.error("WebSocket Error: ", error);
+    };
+
+    ws.current.onclose = () => {
+      console.log("WebSocket Disconnected");
+    };
+
+    return () => {
+      ws.current?.close();
+    };
   }, []);
 
   const handleSendMessage = () => {
-    if (!message.trim()) return;
+    if (!message.trim() || !ws.current) return;
 
     const newMessage = {
       sender: "akkin",
@@ -32,8 +49,8 @@ function ChatScreen() {
       timestamp: new Date().toISOString(),
     };
 
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    wsService.sendMessage(newMessage);
+    setMessages((prevMessages) => [...prevMessages, { id: Date.now().toString(), type: 'sent', text: message }]);
+    ws.current.send(JSON.stringify(newMessage));
     setMessage('');
   };
 
